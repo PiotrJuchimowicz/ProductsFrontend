@@ -1,0 +1,159 @@
+html,
+body {
+    height: 100%;
+    background-size: cover;
+    font-family: "Lato", sans-serif;
+    transition: background-color .5s;
+    background: url("http://static.asiawebdirect.com/m/bangkok/portals/bangkok-com/homepage/top10-shopping-malls/pagePropertiesImage/bangkok-best-shopping-malls.jpg") no-repeat center center fixed;
+}
+
+#divTotal {
+    background-color: green;
+}
+
+.affix {
+    right: 0px;
+}
+
+.affix-top {
+    right: 0px;
+    position: fixed;
+}
+
+.scroll-debug {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* The customcheck */
+
+.customcheck {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+
+.customcheck input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: gold;
+    border-radius: 5px;
+    display: block;
+
+
+}
+
+/* On mouse-over, add a grey background color */
+
+.customcheck:hover input~.checkmark {
+    background-color: gray;
+}
+
+/* When the checkbox is checked, add a blue background */
+
+.customcheck input:checked~.checkmark {
+    background-color: gold;
+    border-radius: 6px;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+
+.customcheck input:checked~.checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+
+.customcheck .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-primary:active,
+.btn.btn-primary.active {
+    color: #ffffff;
+    
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
