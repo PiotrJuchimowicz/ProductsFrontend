@@ -1,7 +1,9 @@
 import React from 'react';
 import Header from './Header';
 import Button from './Button';
-import ProductTable from './ProductTable'
+import ProductTable from './ProductTable';
+import AddingModal from './AddingModal';
+import axios from 'axios';
 
 class ProductList extends React.Component {
     constructor(props) {
@@ -12,6 +14,7 @@ class ProductList extends React.Component {
         //for testing
         this.state = {
             products: this.getProductsForTesting(),
+            showModal: false
         }
     }
 
@@ -86,22 +89,22 @@ class ProductList extends React.Component {
         );
     }
 
-    renderProductTable(){
+    renderProductTable() {
         let productsReadyToDisplay = [];
         let products = this.state.products;
-        let i=0;
-        for(i;i<products.length;i++){
+        let i = 0;
+        for (i; i < products.length; i++) {
             let productWithHtml = this.renderProduct(products[i]);
             productsReadyToDisplay.push(productWithHtml);
         }
-        console.log("Displaying number of products:",productsReadyToDisplay.length);
-        return(
-            <ProductTable value={productsReadyToDisplay}/>
+        console.log("Displaying number of products:", productsReadyToDisplay.length);
+        return (
+            <ProductTable value={productsReadyToDisplay} />
         );
     }
 
     renderProduct(product) {
-            let productWithHtml = 
+        let productWithHtml =
             <tr>
                 <td>{product.id}</td>
                 <td>{product.name}</td>
@@ -112,27 +115,34 @@ class ProductList extends React.Component {
                 <td>{this.renderAddingToSummaryButton("+")}</td>
                 <td>{this.renderAddingCategoryButton("+")}</td>
             </tr>
-            return productWithHtml;
-    }
- 
-    render() {
-        return (
-            <div className="container">
-                {this.renderHeader()}
-                {this.renderAddingButton("Add product")}
-                <hr></hr>
-                {this.renderProductTable()}
-            </div>
-        );
+        return productWithHtml;
     }
 
+    showModal() {
+        this.setState({
+            showModal: true,
+        })
+    }
+
+    hideModalAndSendPost(name,price) {
+        console.log("Sending POST with product");
+        this.setState({
+            showModal: false,
+        })
+    }
     renderAddingButton(text) {
         return (
-            <Button value={text}
-                onClick={ () => this.handleAddingProductByButton()} />
+            <div>
+                <AddingModal show={this.state.showModal} handleSubmit={() => this.hideModalAndSendPost()} 
+                />
+                <button type="button" onClick={() => this.showModal()}>
+                    {text}
+                </button>
+            </div>
         )
     }
 
+    //to remove
     handleAddingProductByButton() {
         //later http request here
         //but now:
@@ -145,50 +155,60 @@ class ProductList extends React.Component {
         this.addProduct(productFromButton);
     }
 
-    renderDeletinProductgButton(text){
+    renderDeletinProductgButton(text) {
         return (
             <Button value={text}
-                onClick={ () => this.handleDeletingProductButton()} />
+                onClick={() => this.handleDeletingProductButton()} />
         )
     }
 
-    handleDeletingProductButton(){
-            //TODO
-    }
-
-    renderUpdatingProductButton(text){
-        return (
-            <Button value={text}
-                onClick={ () => this.handleUpdatingProductButton()} />
-        )
-    }
-
-    handleUpdatingProductButton(){
+    handleDeletingProductButton() {
         //TODO
     }
 
-    renderAddingToSummaryButton(text){
+    renderUpdatingProductButton(text) {
         return (
             <Button value={text}
-                onClick={ () => this.handleUpdatingProductButton()} />
+                onClick={() => this.handleUpdatingProductButton()} />
         )
     }
 
-    handleAddingToSummaryButton(){
+    handleUpdatingProductButton() {
         //TODO
     }
 
-    renderAddingCategoryButton(text){
+    renderAddingToSummaryButton(text) {
         return (
             <Button value={text}
-                onClick={ () => this.handleAddingCategoryButton()} />
+                onClick={() => this.showModal()} />
         )
     }
 
-    handleAddingCategoryButton(){
+    handleAddingToSummaryButton() {
         //TODO
     }
 
+    renderAddingCategoryButton(text) {
+        return (
+            <Button value={text}
+                onClick={() => this.handleAddingCategoryButton()} />
+        )
+    }
+
+    handleAddingCategoryButton() {
+        //TODO
+    }
+
+    render() {
+        return (
+            <div className="container">
+                {this.renderHeader()}
+                {this.renderAddingButton("Add product")}
+                <hr></hr>
+                {this.renderProductTable()}
+            </div>
+        );
+    }
 }
 
 export default ProductList;
