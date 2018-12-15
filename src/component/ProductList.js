@@ -4,53 +4,22 @@ import Button from './Button';
 import ProductTable from './ProductTable';
 import AddingModal from './AddingModal';
 import axios from 'axios';
+import ReactDOM from 'react-dom';
 
 class ProductList extends React.Component {
     constructor(props) {
         super(props);
-        /* this.state = {
-            products: [],
-        }; */
-        //for testing
         this.state = {
-            products: this.getProductsForTesting(),
+            products: [],
             showModal: false
         }
     }
 
-    //method only for testing
-    getProductsForTesting() {
-        let productOne = {
-            id: 1,
-            name: "firstProduct",
-            price: 100,
-            categories: ["A", "B"]
-        };
-        let productTwo = {
-            id: 2,
-            name: "secondProduct",
-            price: 200,
-            categories: ["C", "D"]
-        };
-        let productThree = {
-            id: 3,
-            name: "thirdProduct",
-            price: 300,
-            categories: ["E", "F"]
-        };
-        let productFour = {
-            id: 4,
-            name: "fourthProduct",
-            price: 400,
-            categories: ["G", "H"]
-        }
-        let products = [];
-        products.push(productOne);
-        products.push(productTwo);
-        products.push(productThree);
-        products.push(productFour);
-        return products;
+    componentDidMount() {
+        this.getProductsFromServer();
     }
+
+
     addProduct(product) {
         console.log("Adding product: ", product);
         let products = this.state.products;
@@ -89,6 +58,40 @@ class ProductList extends React.Component {
         );
     }
 
+    getProductsFromServer() {
+        let productsFromServer;
+        let products = [];
+        axios.get("http://localhost:8080/products")
+            .then((response) => {
+                console.log(response.data);
+                productsFromServer = response.data;
+                let i;
+                for (i = 0; i < productsFromServer.length; i++) {
+                    console.log("Adding product to  products array from state: ");
+                    console.log(productsFromServer[i]);
+                    let categories = productsFromServer[i].categories;
+                    let categoriesArray = [];
+                    let j;
+                    for (j = 0; j < categories.length; j++) {
+                        categoriesArray.push(categories[i])
+                    }
+                    console.log("Product categories: ", categoriesArray);
+                    let product = {
+                        "id": productsFromServer[i].id,
+                        "name": productsFromServer[i].name,
+                        "price": productsFromServer[i].price,
+
+                    }
+                    products.push(product)
+                }
+                console.log(products);
+                this.setState({
+                    products: products,
+                });
+            })
+            .catch((error) => console.log(error))
+    }
+
     renderProductTable() {
         let productsReadyToDisplay = [];
         let products = this.state.products;
@@ -105,7 +108,7 @@ class ProductList extends React.Component {
 
     renderProduct(product) {
         let productWithHtml =
-            <tr>
+            <tr key={product.id}>
                 <td>{product.id}</td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
@@ -128,30 +131,19 @@ class ProductList extends React.Component {
         this.setState({
             showModal: false,
         })
+        this.getProductsFromServer();
     }
+    
     renderAddingButton(text) {
         return (
             <div>
-                <AddingModal show={this.state.showModal} handleSubmit={() => this.hideModal()} 
+                <AddingModal show={this.state.showModal} handleSubmit={() => this.hideModal()}
                 />
                 <button className="btn btn-primary" type="button" onClick={() => this.showModal()}>
                     {text}
                 </button>
             </div>
         )
-    }
-
-    //to remove
-    handleAddingProductByButton() {
-        //later http request here
-        //but now:
-        let productFromButton = {
-            id: 5,
-            name: "productFromButton",
-            price: 500,
-            categories: ["I", "J"]
-        }
-        this.addProduct(productFromButton);
     }
 
     renderDeletinProductgButton(text) {
@@ -197,6 +189,7 @@ class ProductList extends React.Component {
     handleAddingCategoryButton() {
         //TODO
     }
+
 
     render() {
         return (

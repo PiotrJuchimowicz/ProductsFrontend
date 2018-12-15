@@ -2,7 +2,7 @@ import React from 'react';
 
 function ProductTable(props) {
     return (
-        <table className="table table-dark" cellSpacing="0" width="100%">
+        <table if="productsTable" className="table table-dark" cellSpacing="0" width="100%">
             <thead>
                 <tr className="thead-dark">
                     <th>Id</th>

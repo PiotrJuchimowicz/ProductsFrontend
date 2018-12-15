@@ -23,9 +23,11 @@ class AddingModal extends React.Component {
             "price": price,
             "categories": [{ name: categoryName },]
         })
-            .then((response) => console.log(response))
+            .then((response) => {
+                console.log(response);
+                this.props.handleSubmit();
+            })
             .catch((error) => console.error(error))
-        this.props.handleSubmit()
     }
     onCloseModal() {
         this.props.handleSubmit()
@@ -45,7 +47,7 @@ class AddingModal extends React.Component {
                             <h4 className="modal-title" id="myModalLabel">Add product</h4>
                         </div>
                         <div className="modal-body">
-                            <form action="#">
+                            <form>
                                 <div className="form-group">
                                     <label htmlFor="name">Name:</label>
                                     <input type="text" className="form-control" id="name" placeholder="Enter name"
