@@ -73,18 +73,21 @@ class ProductList extends React.Component {
                     let categoriesArray = [];
                     let j;
                     for (j = 0; j < categories.length; j++) {
-                        categoriesArray.push(categories[i])
+                        let category = {
+                            "id" : categories[j].id,
+                            "name" : categories[j].name
+                        }
+                        categoriesArray.push(category)
                     }
                     console.log("Product categories: ", categoriesArray);
                     let product = {
                         "id": productsFromServer[i].id,
                         "name": productsFromServer[i].name,
                         "price": productsFromServer[i].price,
-
+                        "categories": categoriesArray
                     }
                     products.push(product)
                 }
-                console.log(products);
                 this.setState({
                     products: products,
                 });
@@ -106,15 +109,28 @@ class ProductList extends React.Component {
         );
     }
 
+    renderCategories(product) {
+        console.log("MUMINEK")
+        console.log(product.categories)
+        let categoriesString = " ";
+        let i;
+        for (i = 0; i < product.categories.length; i++) {
+            categoriesString = categoriesString + product.categories[i].name + ", "
+        }
+        return categoriesString;
+    }
+
     renderProduct(product) {
         let productWithHtml =
             <tr key={product.id}>
                 <td>{product.id}</td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
-                <td>{product.categories}</td>
+                {console.log("MORDECZKA")}
+                {console.log(this.renderCategories(product))}
+                <td>{this.renderCategories(product)}</td>
                 <td>{this.renderUpdatingProductButton("Edit")}</td>
-                <td>{this.renderDeletinProductgButton("Delete")}</td>
+                <td>{this.renderDeletingProductgButton("Delete",product.id)}</td>
                 <td>{this.renderAddingToSummaryButton("+")}</td>
                 <td>{this.renderAddingCategoryButton("+")}</td>
             </tr>
@@ -133,7 +149,7 @@ class ProductList extends React.Component {
         })
         this.getProductsFromServer();
     }
-    
+
     renderAddingButton(text) {
         return (
             <div>
@@ -146,15 +162,21 @@ class ProductList extends React.Component {
         )
     }
 
-    renderDeletinProductgButton(text) {
+    renderDeletingProductgButton(text,productId) {
         return (
             <Button value={text}
-                onClick={() => this.handleDeletingProductButton()} />
+                onClick={() => this.handleDeletingProductButton(productId)} />
         )
     }
 
-    handleDeletingProductButton() {
-        //TODO
+    handleDeletingProductButton(productId) {
+        console.log("Removing product with id: ",productId);
+        axios.delete("http://localhost:8080/products/" + productId)
+        .then((response) => {
+            console.log(response);
+            this.getProductsFromServer();
+        })
+        .catch((error) => console.error(error))
     }
 
     renderUpdatingProductButton(text) {
