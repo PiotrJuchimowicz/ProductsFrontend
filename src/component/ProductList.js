@@ -124,8 +124,7 @@ class ProductList extends React.Component {
         })
     }
 
-    hideModalAndSendPost(name,price) {
-        console.log("Sending POST with product");
+    hideModal() {
         this.setState({
             showModal: false,
         })
@@ -133,9 +132,9 @@ class ProductList extends React.Component {
     renderAddingButton(text) {
         return (
             <div>
-                <AddingModal show={this.state.showModal} handleSubmit={() => this.hideModalAndSendPost()} 
+                <AddingModal show={this.state.showModal} handleSubmit={() => this.hideModal()} 
                 />
-                <button type="button" onClick={() => this.showModal()}>
+                <button className="btn btn-primary" type="button" onClick={() => this.showModal()}>
                     {text}
                 </button>
             </div>
