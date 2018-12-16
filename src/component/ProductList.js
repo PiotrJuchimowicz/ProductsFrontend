@@ -4,6 +4,7 @@ import Button from './Button';
 import ProductTable from './ProductTable';
 import AddingModal from './AddingModal';
 import EditingModal from './EditingModal';
+import AddingCategoryModal from './AddingCategoryModal';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
 
@@ -13,7 +14,8 @@ class ProductList extends React.Component {
         this.state = {
             products: [],
             showAddingModal: false,
-            showEditingModal : false
+            showEditingModal: false,
+            showAddingCategoryModal: false
         }
     }
 
@@ -76,8 +78,8 @@ class ProductList extends React.Component {
                     let j;
                     for (j = 0; j < categories.length; j++) {
                         let category = {
-                            "id" : categories[j].id,
-                            "name" : categories[j].name
+                            "id": categories[j].id,
+                            "name": categories[j].name
                         }
                         categoriesArray.push(category)
                     }
@@ -126,12 +128,11 @@ class ProductList extends React.Component {
                 <td>{product.id}</td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
-                {console.log(this.renderCategories(product))}
                 <td>{this.renderCategories(product)}</td>
-                <td>{this.renderUpdatingProductButton("Edit",product)}</td>
-                <td>{this.renderDeletingProductgButton("Delete",product.id)}</td>
+                <td>{this.renderUpdatingProductButton("Edit", product)}</td>
+                <td>{this.renderDeletingProductgButton("Delete", product.id)}</td>
                 <td>{this.renderAddingToSummaryButton("+")}</td>
-                <td>{this.renderAddingCategoryButton("+")}</td>
+                <td>{this.renderAddingCategoryButton("+",product.id)}</td>
             </tr>
         return productWithHtml;
     }
@@ -149,15 +150,28 @@ class ProductList extends React.Component {
         this.getProductsFromServer();
     }
 
-    showEditingModal(){
+    showEditingModal() {
         this.setState({
             showEditingModal: true,
         })
     }
 
-    hideEditingModal(){
+    hideEditingModal() {
         this.setState({
-            showEditingModal:false,
+            showEditingModal: false,
+        })
+        this.getProductsFromServer();
+    }
+
+    showAddingCategoryModal() {
+        this.setState({
+            showAddingCategoryModal: true
+        })
+    }
+
+    hideAddingCategoryModal() {
+        this.setState({
+            showAddingCategoryModal: false,
         })
         this.getProductsFromServer();
     }
@@ -165,7 +179,7 @@ class ProductList extends React.Component {
     renderAddingProductButton(text) {
         return (
             <div>
-                <AddingModal show={ this.state.showAddingModal} handleSubmit={() => this.hideAddingModal()}
+                <AddingModal show={this.state.showAddingModal} handleSubmit={() => this.hideAddingModal()}
                 />
                 <button className="btn btn-primary" type="button" onClick={() => this.showAddingModal()}>
                     {text}
@@ -174,19 +188,19 @@ class ProductList extends React.Component {
         )
     }
 
-    renderUpdatingProductButton(text,product) {
+    renderUpdatingProductButton(text, product) {
         return (
             <div>
                 <EditingModal show={this.state.showEditingModal} handleSubmit={() => this.hideEditingModal()}
-                product={product} />
-            <button className="btn btn-info" type="button" onClick={() => this.showEditingModal()} >
+                    product={product} />
+                <button className="btn btn-info" type="button" onClick={() => this.showEditingModal()} >
                     {text}
                 </button>
-                </div>
+            </div>
         )
     }
 
-    renderDeletingProductgButton(text,productId) {
+    renderDeletingProductgButton(text, productId) {
         return (
             <Button value={text}
                 onClick={() => this.handleDeletingProductButton(productId)} />
@@ -194,37 +208,34 @@ class ProductList extends React.Component {
     }
 
     handleDeletingProductButton(productId) {
-        console.log("Removing product with id: ",productId);
+        console.log("Removing product with id: ", productId);
         axios.delete("http://localhost:8080/products/" + productId)
-        .then((response) => {
-            console.log(response);
-            this.getProductsFromServer();
-        })
-        .catch((error) => console.error(error))
+            .then((response) => {
+                console.log(response);
+                this.getProductsFromServer();
+            })
+            .catch((error) => console.error(error))
     }
-    
+
     renderAddingToSummaryButton(text) {
-        return (
-            <Button value={text}
-                onClick={() => this.showAddingModal()} />
-        )
+        //TODO
     }
 
     handleAddingToSummaryButton() {
         //TODO
     }
 
-    renderAddingCategoryButton(text) {
-        return (
-            <Button value={text}
-                onClick={() => this.handleAddingCategoryButton()} />
+    renderAddingCategoryButton(text,productId) {
+        return(
+        <div>
+            <AddingCategoryModal show={this.state.showAddingCategoryModal} handleSubmit={() => this.hideAddingCategoryModal()}
+            productId={productId}/>
+            <button className="btn btn-info" type="button" onClick={() => this.showAddingCategoryModal()} >
+                {text}
+            </button>
+        </div>
         )
     }
-
-    handleAddingCategoryButton() {
-        //TODO
-    }
-
 
     render() {
         return (
