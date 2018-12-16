@@ -10,10 +10,14 @@ class AddingModal extends React.Component {
             categoryName: " ",
         }
     }
-    onSubmitForm() {
+    onEditingProduct(){
+        console.log("Editing product")
+    }
+    onAddingProduct() {
         let name = this.state.name;
         let price = this.state.price;
         let categoryName = this.state.categoryName
+        console.log("Adding new product")
         console.log("Sending POST on http://localhost:8080/products with fields: ");
         console.log("name: ", name);
         console.log("price: ", price);
@@ -43,9 +47,11 @@ class AddingModal extends React.Component {
                 role="dialog" >
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
+                    
                         <div className="modal-header">
                             <h4 className="modal-title" id="myModalLabel">Add product</h4>
                         </div>
+                       
                         <div className="modal-body">
                             <form>
                                 <div className="form-group">
@@ -59,7 +65,7 @@ class AddingModal extends React.Component {
                                         name="price" required value={this.state.price} onChange={this.handlePriceChange}></input>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="name">Category:</label>
+                                    <label htmlFor="category">Category:</label>
                                     <input type="text" className="form-control" id="category" placeholder="Enter category"
                                         name="category" required value={this.state.categoryName} onChange={this.handleCategoryChange}></input>
                                 </div>
@@ -69,7 +75,7 @@ class AddingModal extends React.Component {
                             <button type="button" className="btn btn-default"
                                 data-dismiss="modal" onClick={this.onCloseModal.bind(this)}>Close</button>
                             <button type="button" className="btn btn-primary"
-                                onClick={this.onSubmitForm.bind(this)}>Add</button>
+                                onClick={this.onAddingProduct.bind(this)}>Add</button>
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@ import Header from './Header';
 import Button from './Button';
 import ProductTable from './ProductTable';
 import AddingModal from './AddingModal';
+import EditingModal from './EditingModal';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
 
@@ -11,7 +12,8 @@ class ProductList extends React.Component {
         super(props);
         this.state = {
             products: [],
-            showModal: false
+            showAddingModal: false,
+            showEditingModal : false
         }
     }
 
@@ -110,8 +112,6 @@ class ProductList extends React.Component {
     }
 
     renderCategories(product) {
-        console.log("MUMINEK")
-        console.log(product.categories)
         let categoriesString = " ";
         let i;
         for (i = 0; i < product.categories.length; i++) {
@@ -126,10 +126,9 @@ class ProductList extends React.Component {
                 <td>{product.id}</td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
-                {console.log("MORDECZKA")}
                 {console.log(this.renderCategories(product))}
                 <td>{this.renderCategories(product)}</td>
-                <td>{this.renderUpdatingProductButton("Edit")}</td>
+                <td>{this.renderUpdatingProductButton("Edit",product)}</td>
                 <td>{this.renderDeletingProductgButton("Delete",product.id)}</td>
                 <td>{this.renderAddingToSummaryButton("+")}</td>
                 <td>{this.renderAddingCategoryButton("+")}</td>
@@ -137,28 +136,53 @@ class ProductList extends React.Component {
         return productWithHtml;
     }
 
-    showModal() {
+    showAddingModal() {
         this.setState({
-            showModal: true,
+            showAddingModal: true,
         })
     }
 
-    hideModal() {
+    hideAddingModal() {
         this.setState({
-            showModal: false,
+            showAddingModal: false,
         })
         this.getProductsFromServer();
     }
 
-    renderAddingButton(text) {
+    showEditingModal(){
+        this.setState({
+            showEditingModal: true,
+        })
+    }
+
+    hideEditingModal(){
+        this.setState({
+            showEditingModal:false,
+        })
+        this.getProductsFromServer();
+    }
+
+    renderAddingProductButton(text) {
         return (
             <div>
-                <AddingModal show={this.state.showModal} handleSubmit={() => this.hideModal()}
+                <AddingModal show={ this.state.showAddingModal} handleSubmit={() => this.hideAddingModal()}
                 />
-                <button className="btn btn-primary" type="button" onClick={() => this.showModal()}>
+                <button className="btn btn-primary" type="button" onClick={() => this.showAddingModal()}>
                     {text}
                 </button>
             </div>
+        )
+    }
+
+    renderUpdatingProductButton(text,product) {
+        return (
+            <div>
+                <EditingModal show={this.state.showEditingModal} handleSubmit={() => this.hideEditingModal()}
+                product={product} />
+            <button className="btn btn-info" type="button" onClick={() => this.showEditingModal()} >
+                    {text}
+                </button>
+                </div>
         )
     }
 
@@ -178,22 +202,11 @@ class ProductList extends React.Component {
         })
         .catch((error) => console.error(error))
     }
-
-    renderUpdatingProductButton(text) {
-        return (
-            <Button value={text}
-                onClick={() => this.handleUpdatingProductButton()} />
-        )
-    }
-
-    handleUpdatingProductButton() {
-        //TODO
-    }
-
+    
     renderAddingToSummaryButton(text) {
         return (
             <Button value={text}
-                onClick={() => this.showModal()} />
+                onClick={() => this.showAddingModal()} />
         )
     }
 
@@ -217,7 +230,7 @@ class ProductList extends React.Component {
         return (
             <div className="container">
                 {this.renderHeader()}
-                {this.renderAddingButton("Add product")}
+                {this.renderAddingProductButton("Add product")}
                 <hr></hr>
                 {this.renderProductTable()}
             </div>
