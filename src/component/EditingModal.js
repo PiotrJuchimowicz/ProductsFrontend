@@ -24,7 +24,7 @@ class EditingModal extends React.Component {
             console.log(response);
             this.props.handleSubmit();
         })
-        .catch((error)=>console.log(error))
+        .catch((error)=>console.error(error))
     }
 
     onCloseModal() {

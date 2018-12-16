@@ -10,9 +10,7 @@ class AddingModal extends React.Component {
             categoryName: " ",
         }
     }
-    onEditingProduct(){
-        console.log("Editing product")
-    }
+    
     onAddingProduct() {
         let name = this.state.name;
         let price = this.state.price;

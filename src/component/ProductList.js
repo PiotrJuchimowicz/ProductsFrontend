@@ -20,6 +20,7 @@ class ProductList extends React.Component {
     }
 
     componentDidMount() {
+        console.log("Getting products from server")
         this.getProductsFromServer();
     }
 
@@ -67,12 +68,9 @@ class ProductList extends React.Component {
         let products = [];
         axios.get("http://localhost:8080/products")
             .then((response) => {
-                console.log(response.data);
                 productsFromServer = response.data;
                 let i;
                 for (i = 0; i < productsFromServer.length; i++) {
-                    console.log("Adding product to  products array from state: ");
-                    console.log(productsFromServer[i]);
                     let categories = productsFromServer[i].categories;
                     let categoriesArray = [];
                     let j;
@@ -83,11 +81,11 @@ class ProductList extends React.Component {
                         }
                         categoriesArray.push(category)
                     }
-                    console.log("Product categories: ", categoriesArray);
                     let product = {
                         "id": productsFromServer[i].id,
                         "name": productsFromServer[i].name,
                         "price": productsFromServer[i].price,
+                        "isInSummary" : productsFromServer[i].isInSummary,
                         "categories": categoriesArray
                     }
                     products.push(product)
@@ -131,7 +129,7 @@ class ProductList extends React.Component {
                 <td>{this.renderCategories(product)}</td>
                 <td>{this.renderUpdatingProductButton("Edit", product)}</td>
                 <td>{this.renderDeletingProductgButton("Delete", product.id)}</td>
-                <td>{this.renderAddingToSummaryButton("+")}</td>
+                <td>{this.renderAddingToSummaryButton("+",product)}</td>
                 <td>{this.renderAddingCategoryButton("+",product.id)}</td>
             </tr>
         return productWithHtml;
@@ -217,12 +215,26 @@ class ProductList extends React.Component {
             .catch((error) => console.error(error))
     }
 
-    renderAddingToSummaryButton(text) {
-        //TODO
+    renderAddingToSummaryButton(text,productId) {
+        return (
+            <Button value={text}
+                onClick={() => this.handleAddingToSummaryButton(productId)} />
+        )
     }
 
-    handleAddingToSummaryButton() {
-        //TODO
+    handleAddingToSummaryButton(product) {
+        console.log(product)
+        console.log("Adding to summary product with id: ",product.id);
+        axios.put("http://localhost:8080/products",{
+            "id" : product.id,
+            "name" : product.name,
+            "price" : product.price,
+            "isInSummary" : true
+        }).then((response) => {
+            console.log(response);
+            this.getProductsFromServer();
+        })
+        .catch((error) => console.error(error))
     }
 
     renderAddingCategoryButton(text,productId) {
