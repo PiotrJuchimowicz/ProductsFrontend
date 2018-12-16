@@ -20,6 +20,7 @@ class App extends React.Component {
             <a href="/">Products</a>
             <a href="/summary">Summary</a>
           </div>
+          <br></br>
           <Route exact path="/" component={ProductList} />
           <Route path="/summary" component={Summary} />
         </div>

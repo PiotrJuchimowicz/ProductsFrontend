@@ -107,7 +107,7 @@ class ProductList extends React.Component {
         }
         console.log("Displaying number of products:", productsReadyToDisplay.length);
         return (
-            <ProductTable value={productsReadyToDisplay} />
+            <ProductTable value={productsReadyToDisplay} isSummary={false} />
         );
     }
 
