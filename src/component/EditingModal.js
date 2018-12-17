@@ -35,8 +35,12 @@ class EditingModal extends React.Component {
     handlePriceChange = event => { this.setState({ price: event.target.value }) }
 
     render() {
+        let show = this.props.show;
+        if(typeof show != "boolean"){
+            console.error("Wrong property type passed to EditingModal component");
+        }
         return (
-            <div id="myEditingModal" className={this.props.show ? "modal  display-block" : "modal  display-none"}
+            <div id="myEditingModal" className={show ? "modal  display-block" : "modal  display-none"}
             role="dialog" >
             <div className="modal-dialog" role="document">
                 <div className="modal-content">

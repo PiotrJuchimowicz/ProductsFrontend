@@ -33,8 +33,12 @@ class AddingCategoryModal extends React.Component {
     }
 
     render(){
+        let show = this.props.show;
+        if(typeof show != "boolean"){
+            console.error("Wrong property type passed to AddingCategoryModal component");
+        }
         return(
-            <div id="myModal" className={this.props.show ? "modal  display-block" : "modal  display-none"}
+            <div id="myModal" className={show ? "modal  display-block" : "modal  display-none"}
                 role="dialog" >
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">

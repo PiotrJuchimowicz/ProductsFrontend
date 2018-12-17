@@ -40,8 +40,12 @@ class AddingModal extends React.Component {
     handleCategoryChange = event => { this.setState({ categoryName: event.target.value }) }
 
     render() {
+        let show = this.props.show;
+        if(typeof show != "boolean"){
+            console.error("Wrong property type passed to AddingModal component");
+        }
         return (
-            <div id="myModal" className={this.props.show ? "modal  display-block" : "modal  display-none"}
+            <div id="myModal" className={show ? "modal  display-block" : "modal  display-none"}
                 role="dialog" >
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">

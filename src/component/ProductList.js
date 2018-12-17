@@ -6,7 +6,6 @@ import AddingModal from './AddingModal';
 import EditingModal from './EditingModal';
 import AddingCategoryModal from './AddingCategoryModal';
 import axios from 'axios';
-import ReactDOM from 'react-dom';
 
 class ProductList extends React.Component {
     constructor(props) {
@@ -15,12 +14,12 @@ class ProductList extends React.Component {
             products: [],
             showAddingModal: false,
             showEditingModal: false,
-            showAddingCategoryModal: false
+            showAddingCategoryModal: false,
+            areSortedByPrice: false,
         }
     }
 
     componentDidMount() {
-        console.log("Getting products from server")
         this.getProductsFromServer();
     }
 
@@ -85,7 +84,7 @@ class ProductList extends React.Component {
                         "id": productsFromServer[i].id,
                         "name": productsFromServer[i].name,
                         "price": productsFromServer[i].price,
-                        "isInSummary" : productsFromServer[i].isInSummary,
+                        "isInSummary": productsFromServer[i].isInSummary,
                         "categories": categoriesArray
                     }
                     products.push(product)
@@ -100,6 +99,14 @@ class ProductList extends React.Component {
     renderProductTable() {
         let productsReadyToDisplay = [];
         let products = this.state.products;
+        let areSortedByPrice = this.state.areSortedByPrice;
+        if (areSortedByPrice) {
+            products.sort(
+                function (a, b) {
+                    return a.price - b.price
+                }
+            )
+        }
         let i = 0;
         for (i; i < products.length; i++) {
             let productWithHtml = this.renderProduct(products[i]);
@@ -129,8 +136,8 @@ class ProductList extends React.Component {
                 <td>{this.renderCategories(product)}</td>
                 <td>{this.renderUpdatingProductButton("Edit", product)}</td>
                 <td>{this.renderDeletingProductgButton("Delete", product.id)}</td>
-                <td>{this.renderAddingToSummaryButton("+",product)}</td>
-                <td>{this.renderAddingCategoryButton("+",product.id)}</td>
+                <td>{this.renderAddingToSummaryButton("+", product)}</td>
+                <td>{this.renderAddingCategoryButton("+", product.id)}</td>
             </tr>
         return productWithHtml;
     }
@@ -215,7 +222,7 @@ class ProductList extends React.Component {
             .catch((error) => console.error(error))
     }
 
-    renderAddingToSummaryButton(text,productId) {
+    renderAddingToSummaryButton(text, productId) {
         return (
             <Button value={text}
                 onClick={() => this.handleAddingToSummaryButton(productId)} />
@@ -223,37 +230,51 @@ class ProductList extends React.Component {
     }
 
     handleAddingToSummaryButton(product) {
-        console.log(product)
-        console.log("Adding to summary product with id: ",product.id);
-        axios.put("http://localhost:8080/products",{
-            "id" : product.id,
-            "name" : product.name,
-            "price" : product.price,
-            "isInSummary" : true
+        console.log("Adding to summary product with id: ", product.id);
+        axios.put("http://localhost:8080/products", {
+            "id": product.id,
+            "name": product.name,
+            "price": product.price,
+            "isInSummary": true
         }).then((response) => {
             console.log(response);
             this.getProductsFromServer();
         })
-        .catch((error) => console.error(error))
+            .catch((error) => console.error(error))
     }
 
-    renderAddingCategoryButton(text,productId) {
-        return(
-        <div>
-            <AddingCategoryModal show={this.state.showAddingCategoryModal} handleSubmit={() => this.hideAddingCategoryModal()}
-            productId={productId}/>
-            <button className="btn btn-info" type="button" onClick={() => this.showAddingCategoryModal()} >
-                {text}
-            </button>
-        </div>
+    renderAddingCategoryButton(text, productId) {
+        return (
+            <div>
+                <AddingCategoryModal show={this.state.showAddingCategoryModal} handleSubmit={() => this.hideAddingCategoryModal()}
+                    productId={productId} />
+                <button className="btn btn-info" type="button" onClick={() => this.showAddingCategoryModal()} >
+                    {text}
+                </button>
+            </div>
         )
+    }
+
+    renderSortingButton(text) {
+        return (
+            <Button value={text} onClick={() => this.handleSortingButton()} />
+        )
+    }
+
+    handleSortingButton() {
+        this.setState({
+            areSortedByPrice: true,
+        })
     }
 
     render() {
         return (
             <div className="container">
                 {this.renderHeader()}
-                {this.renderAddingProductButton("Add product")}
+                <div className="btn-group" role="group" aria-label="Basic example">
+                    {this.renderAddingProductButton("Add product")}
+                    {this.renderSortingButton("Sort by price")}
+                </div>
                 <hr></hr>
                 {this.renderProductTable()}
             </div>
