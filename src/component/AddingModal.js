@@ -110,7 +110,6 @@ class AddingModal extends React.Component {
             </div>
         )
     }
-
 }
 
 export default AddingModal;

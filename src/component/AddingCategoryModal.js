@@ -7,10 +7,29 @@ class AddingCategoryModal extends React.Component {
         this.state = {
             name: " ",
             productId : this.props.productId,
+            isFormValid : false
         }
     }
 
-    handleNameChange = event => { this.setState({ name: event.target.value }) }
+    handleNameChange = event => {
+         this.setState({ name: event.target.value });
+         this.handleIfFormValid(); 
+        }
+
+    handleIfFormValid() {
+        if (this.state.name!= " ") {
+            console.log("Form is valid")
+            this.setState({
+                isFormValid: true
+            })
+        }
+        else {
+            console.log("Form is not valid")
+            this.setState({
+                isFormValid: false
+            })
+        }
+    }
 
     onAddingCategory(){
         let name = this.state.name;
@@ -53,15 +72,14 @@ class AddingCategoryModal extends React.Component {
                         <div className="modal-footer">
                             <button type="button" className="btn btn-default"
                                 data-dismiss="modal" onClick={this.onCloseModal.bind(this)}>Close</button>
-                            <button type="button" className="btn btn-primary"
+                            <button type="button" className="btn btn-primary" disabled={!this.state.isFormValid}
                                 onClick={this.onAddingCategory.bind(this)}>Add</button>
                         </div>
                     </div>
                 </div>
             </div>
         )
-    }
-   
+    } 
 }
 
 export default AddingCategoryModal;
