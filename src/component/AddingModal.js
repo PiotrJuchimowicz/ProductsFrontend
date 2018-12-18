@@ -8,9 +8,10 @@ class AddingModal extends React.Component {
             name: " ",
             price: 0,
             categoryName: " ",
+            isFormValid: false
         }
     }
-    
+
     onAddingProduct() {
         let name = this.state.name;
         let price = this.state.price;
@@ -35,13 +36,38 @@ class AddingModal extends React.Component {
         this.props.handleSubmit()
     }
 
-    handleNameChange = event => { this.setState({ name: event.target.value }) }
-    handlePriceChange = event => { this.setState({ price: event.target.value }) }
-    handleCategoryChange = event => { this.setState({ categoryName: event.target.value }) }
+    handleNameChange = event => {
+        this.setState({ name: event.target.value });
+        this.handleIfFormValid();
+    }
+
+    handlePriceChange = event => {
+        this.setState({ price: event.target.value });
+        this.handleIfFormValid();
+    }
+    handleCategoryChange = event => {
+        this.setState({ categoryName: event.target.value });
+        this.handleIfFormValid();
+    }
+
+    handleIfFormValid() {
+        if (this.state.price >= 0 && this.state.name.trim() != 0 && this.state.categoryName.trim() != 0) {
+            console.log("Form is valid")
+            this.setState({
+                isFormValid: true
+            })
+        }
+        else {
+            console.log("Form is not valid")
+            this.setState({
+                isFormValid: false
+            })
+        }
+    }
 
     render() {
         let show = this.props.show;
-        if(typeof show != "boolean"){
+        if (typeof show != "boolean") {
             console.error("Wrong property type passed to AddingModal component");
         }
         return (
@@ -49,13 +75,13 @@ class AddingModal extends React.Component {
                 role="dialog" >
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
-                    
+
                         <div className="modal-header">
                             <h4 className="modal-title" id="myModalLabel">Add product</h4>
                         </div>
-                       
+
                         <div className="modal-body">
-                            <form>
+                            <form name="add-product">
                                 <div className="form-group">
                                     <label htmlFor="name">Name:</label>
                                     <input type="text" className="form-control" id="name" placeholder="Enter name"
@@ -76,7 +102,7 @@ class AddingModal extends React.Component {
                         <div className="modal-footer">
                             <button type="button" className="btn btn-default"
                                 data-dismiss="modal" onClick={this.onCloseModal.bind(this)}>Close</button>
-                            <button type="button" className="btn btn-primary"
+                            <button type="button" disabled={!this.state.isFormValid} className="btn btn-primary"
                                 onClick={this.onAddingProduct.bind(this)}>Add</button>
                         </div>
                     </div>
