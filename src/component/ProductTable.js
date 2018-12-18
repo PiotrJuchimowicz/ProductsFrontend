@@ -33,6 +33,7 @@ function ProductTable(props) {
                     <th>Edit</th>
                     <th>Delete</th>
                     <th>Add to summary</th>
+                    <th>Remove from summary</th>
                     <th>Add category</th>
                 </tr>
                 {products}

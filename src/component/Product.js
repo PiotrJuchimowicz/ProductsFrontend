@@ -90,6 +90,27 @@ class Product extends React.Component{
             .catch((error) => console.error(error))
     }
 
+    renderRemovingFromSummaryButton(text) {
+        return (
+            <Button value={text}
+                onClick={() => this.handleRemovingFromSummaryButton()} />
+        )
+    }
+
+    handleRemovingFromSummaryButton() {
+        console.log("Removing from summary product with id: ", this.state.id);
+        axios.put("http://localhost:8080/products", {
+            "id": this.state.id,
+            "name": this.state.name,
+            "price": this.state.price,
+            "isInSummary": false
+        }).then((response) => {
+            console.log(response);
+            this.props.refreshData();
+        })
+            .catch((error) => console.error(error))
+    }
+
     renderUpdatingProductButton(text) {
         return (
             <div>
@@ -125,6 +146,7 @@ class Product extends React.Component{
             <td>{this.renderUpdatingProductButton("Edit")}</td>
             <td>{this.renderDeletingProductgButton("Delete")}</td>
             <td>{this.renderAddingToSummaryButton("+")}</td>
+            <td>{this.renderRemovingFromSummaryButton("-")}</td>
             <td>{this.renderAddingCategoryButton("+")}</td>
         </tr>)
     }

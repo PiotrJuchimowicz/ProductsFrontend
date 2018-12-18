@@ -2,11 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import ProductTable from './ProductTable'
 import Header from './Header';
-class Summary extends React.Component{
-    constructor(props){
+class Summary extends React.Component {
+    constructor(props) {
         super(props);
-        this.state={
-            products : []
+        this.state = {
+            products: []
         }
     }
     componentDidMount() {
@@ -35,7 +35,7 @@ class Summary extends React.Component{
                         "id": productsFromServer[i].id,
                         "name": productsFromServer[i].name,
                         "price": productsFromServer[i].price,
-                        "isInSummary" : productsFromServer[i].isInSummary,
+                        "isInSummary": productsFromServer[i].isInSummary,
                         "categories": categoriesArray
                     }
                     products.push(product)
@@ -55,7 +55,6 @@ class Summary extends React.Component{
             let productWithHtml = this.renderProduct(products[i]);
             productsReadyToDisplay.push(productWithHtml);
         }
-        console.log("Displaying number of products:", productsReadyToDisplay.length);
         return (
             <ProductTable value={productsReadyToDisplay} isSummary={true} />
         );
@@ -86,11 +85,22 @@ class Summary extends React.Component{
         );
     }
 
-    render(){
-        return(
+    calculateTotalCost() {
+        let products = this.state.products;
+        let totalCost = 0;
+        for (let i = 0; i < products.length; i++) {
+            totalCost = totalCost + products[i].price;
+        }
+        return totalCost;
+    }
+
+    render() {
+        return (
             <div>
                 {this.renderHeader()}
-               {this.renderProductTable()}
+                <hr className="my-4"></hr>
+                <p className="lead">Total cost: {this.calculateTotalCost()}</p>
+                {this.renderProductTable()}
             </div>
         )
     }
