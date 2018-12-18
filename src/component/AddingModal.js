@@ -51,7 +51,7 @@ class AddingModal extends React.Component {
     }
 
     handleIfFormValid() {
-        if (this.state.price >= 0 && this.state.name.trim() != 0 && this.state.categoryName.trim() != 0) {
+        if (this.state.price >= 0 && this.state.name!== " " && this.state.categoryName!== " ") {
             console.log("Form is valid")
             this.setState({
                 isFormValid: true
