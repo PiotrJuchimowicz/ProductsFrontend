@@ -6,18 +6,18 @@ class AddingCategoryModal extends React.Component {
         super(props);
         this.state = {
             name: " ",
-            productId : this.props.productId,
-            isFormValid : false
+            productId: this.props.productId,
+            isFormValid: false
         }
     }
 
     handleNameChange = event => {
-         this.setState({ name: event.target.value });
-         this.handleIfFormValid(); 
-        }
+        this.setState({ name: event.target.value });
+        this.handleIfFormValid();
+    }
 
     handleIfFormValid() {
-        if (this.state.name!= " ") {
+        if (this.state.name != " ") {
             console.log("Form is valid")
             this.setState({
                 isFormValid: true
@@ -31,32 +31,58 @@ class AddingCategoryModal extends React.Component {
         }
     }
 
-    onAddingCategory(){
+    onAddingCategory() {
         let name = this.state.name;
         let productId = this.state.productId;
-        console.log("Adding new category for product with id: ",productId)
-        console.log("Sending POST on http://localhost:8080/products/addCategory/"+productId +" with fields: ");
-        console.log("name: ", name);
-        axios.post("http://localhost:8080/products/addCategory/"+ productId, {
-            "name": name,
-        })
+        console.log("Checking if category with specified name already exists");
+        axios.get("http://localhost:8080/categories/"+name)
             .then((response) => {
                 console.log(response);
+                let categoryId = response.data.id;
+                if (categoryId != undefined) {
+                    console.log("Specified category already exists");
+                    console.log("Adding new category for product with id: ", productId)
+                    console.log("Sending POST on http://localhost:8080/products/addCategory/" + productId + " with fields: ");
+                    console.log("name: ", name);
+                    axios.post("http://localhost:8080/products/addCategory/" + productId, {
+                        "id": categoryId,
+                        "name": name,
+                    })
+                        .then((response) => {
+                            console.log(response);
+                            this.props.handleSubmit();
+                        })
+                        .catch((error) => console.error(error))
+                }
+                else {
+                    console.log("Specified category doesnt exist");
+                    console.log("Adding new category for product with id: ", productId)
+                    console.log("Sending POST on http://localhost:8080/products/addCategory/" + productId + " with fields: ");
+                    console.log("name: ", name);
+                    axios.post("http://localhost:8080/products/addCategory/" + productId, {
+                        "name": name,
+                    })
+                        .then((response) => {
+                            console.log(response);
+                            this.props.handleSubmit();
+                        })
+                        .catch((error) => console.error(error))
+                }
                 this.props.handleSubmit();
             })
             .catch((error) => console.error(error))
     }
 
-    onCloseModal(){
+    onCloseModal() {
         this.props.handleSubmit();
     }
 
-    render(){
+    render() {
         let show = this.props.show;
-        if(typeof show != "boolean"){
+        if (typeof show != "boolean") {
             console.error("Wrong property type passed to AddingCategoryModal component");
         }
-        return(
+        return (
             <div id="myModal" className={show ? "modal  display-block" : "modal  display-none"}
                 role="dialog" >
                 <div className="modal-dialog" role="document">
@@ -65,7 +91,7 @@ class AddingCategoryModal extends React.Component {
                             <form>
                                 <div className="form-group">
                                     <input type="text" className="form-control" id="name" placeholder="Enter category name"
-                                        name="name" required  onChange={this.handleNameChange}></input>
+                                        name="name" required onChange={this.handleNameChange}></input>
                                 </div>
                             </form>
                         </div>
@@ -79,7 +105,7 @@ class AddingCategoryModal extends React.Component {
                 </div>
             </div>
         )
-    } 
+    }
 }
 
 export default AddingCategoryModal;
